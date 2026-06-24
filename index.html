@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignalIQ - Deploy Multi-Agent Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Color Palette - The Kinetic Monolith */
+            --surface-lowest: #0E0E0E;
+            --surface-low: #1C1B1B;
+            --surface: #131313;
+            --surface-high: #2A2A2A;
+            --surface-bright: #3A3A3A;
+            --surface-highest: #353534;
+
+            /* Primary Colors */
+            --primary-container: #A5C8FF;
+            --primary: #D4E3FF;
+            --primary-fixed-dim: #7A9FD4;
+            --primary-dark: #0066FF;
+
+            /* Text Colors */
+            --on-surface: #E5E2E1;
+            --on-surface-dim: #B6B5B4;
+            --secondary: #C7C6C6;
+            --on-secondary-container: #B6B5B4;
+
+            /* Borders & Outlines */
+            --outline-variant: #43474F;
+
+            /* Spacing */
+            --spacing-2: 0.5rem;
+            --spacing-4: 1rem;
+            --spacing-6: 1.5rem;
+            --spacing-8: 2rem;
+            --spacing-12: 3rem;
+            --spacing-16: 4rem;
+            --spacing-24: 6rem;
+
+            /* Typography */
+            --font-display: 'Cormorant Garamond', serif;
+            --font-ui: 'Inter', sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--surface);
+            color: var(--on-surface);
+            font-family: var(--font-ui);
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════════ NAVIGATION ═══════════════════════════════════════════ */
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(19, 19, 19, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(67, 71, 79, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-6) var(--spacing-8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--on-surface);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-8);
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--on-surface-dim);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-container);
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+            color: #00315F;
+            padding: var(--spacing-4) var(--spacing-8);
+            border: none;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0px 8px 24px rgba(165, 200, 255, 0.2);
+            font-family: var(--font-ui);
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0px 12px 32px rgba(165, 200, 255, 0.3);
+        }
+
+        .btn-start:active {
+            transform: translateY(0);
+        }
+
+        /* ═══════════════════════════════════════════ HERO SECTION ═══════════════════════════════════════════ */
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: var(--spacing-24) var(--spacing-8);
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -20%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(165, 200, 255, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(48px, 8vw, 72px);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: var(--spacing-8);
+            letter-spacing: -0.02em;
+            font-style: italic;
+            color: var(--on-surface);
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--primary-container);
+        }
+
+        .hero-subtitle {
+            font-size: 18px;
+            color: var(--secondary);
+            margin-bottom: var(--spacing-12);
+            line-height: 1.6;
+            max-width: 500px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: var(--spacing-4);
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+            color: #00315F;
+            padding: var(--spacing-6) var(--spacing-12);
+            border: none;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-ui);
+            box-shadow: 0px 24px 48px rgba(0, 0, 0, 0.4), 0px 4px 12px rgba(165, 200, 255, 0.08);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 32px 64px rgba(0, 0, 0, 0.5), 0px 8px 20px rgba(165, 200, 255, 0.12);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-2px);
+        }
+
+        /* ═══════════════════════════════════════════ METRICS SECTION ═══════════════════════════════════════════ */
+
+        .metrics {
+            padding: var(--spacing-16) var(--spacing-8);
+            background: var(--surface-low);
+            margin-top: var(--spacing-24);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-12);
+        }
+
+        .metric {
+            padding: var(--spacing-8) 0;
+        }
+
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--primary-container);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--on-secondary-container);
+        }
+
+        /* ═══════════════════════════════════════════ CORE SECTION ═══════════════════════════════════════════ */
+
+        .core-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-24) var(--spacing-8);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-16);
+            align-items: center;
+        }
+
+        .core-label {
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--on-secondary-container);
+            margin-bottom: var(--spacing-4);
+            display: block;
+        }
+
+        .core-title {
+            font-family: var(--font-display);
+            font-size: clamp(36px, 5vw, 54px);
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-8);
+            font-style: italic;
+            color: var(--on-surface);
+        }
+
+        .core-description {
+            font-size: 16px;
+            color: var(--secondary);
+            line-height: 1.8;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .architecture-diagram {
+            background: var(--surface-low);
+            padding: var(--spacing-12);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-8);
+            border-radius: 0;
+        }
+
+        .arch-component {
+            background: var(--surface-high);
+            padding: var(--spacing-8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-4);
+            min-height: 140px;
+            position: relative;
+        }
+
+        .arch-icon {
+            font-size: 28px;
+            opacity: 0.8;
+        }
+
+        .arch-label {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--on-surface-dim);
+            text-align: center;
+        }
+
+        /* ═══════════════════════════════════════════ FEATURES SECTION ═══════════════════════════════════════════ */
+
+        .features-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-24) var(--spacing-8);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-16);
+        }
+
+        .feature-card {
+            padding: var(--spacing-12);
+            background: transparent;
+        }
+
+        .feature-number {
+            font-family: var(--font-display);
+            font-size: 48px;
+            font-weight: 300;
+            color: var(--on-surface-dim);
+            margin-bottom: var(--spacing-8);
+            letter-spacing: -0.02em;
+        }
+
+        .feature-title {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: var(--spacing-6);
+            color: var(--on-surface);
+            font-style: italic;
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: var(--secondary);
+            line-height: 1.8;
+            margin-bottom: var(--spacing-6);
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+        }
+
+        .feature-list li {
+            font-size: 14px;
+            color: var(--on-secondary-container);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+        }
+
+        .feature-list li::before {
+            content: '◆';
+            color: var(--primary-container);
+            font-size: 8px;
+        }
+
+        /* ═══════════════════════════════════════════ CTA SECTION ═══════════════════════════════════════════ */
+
+        .cta-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: var(--spacing-24) var(--spacing-8);
+            text-align: center;
+            background: linear-gradient(180deg, rgba(165, 200, 255, 0.03) 0%, transparent 100%);
+        }
+
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(36px, 5vw, 54px);
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: var(--spacing-8);
+            font-style: italic;
+            color: var(--on-surface);
+        }
+
+        .cta-subtitle {
+            font-size: 16px;
+            color: var(--secondary);
+            margin-bottom: var(--spacing-12);
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+            color: #00315F;
+            padding: var(--spacing-6) var(--spacing-12);
+            border: none;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-ui);
+            display: inline-block;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 24px 48px rgba(165, 200, 255, 0.15);
+        }
+
+        .cta-footnote {
+            font-size: 12px;
+            color: var(--on-secondary-container);
+            letter-spacing: 0.05em;
+        }
+
+        /* ═══════════════════════════════════════════ FOOTER ═══════════════════════════════════════════ */
+
+        footer {
+            background: var(--surface-low);
+            padding: var(--spacing-16) var(--spacing-8);
+            border-top: 1px solid rgba(67, 71, 79, 0.2);
+            margin-top: var(--spacing-24);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-12);
+        }
+
+        .footer-section h3 {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-6);
+            color: var(--on-surface);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+        }
+
+        .footer-section a {
+            font-size: 14px;
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-container);
+        }
+
+        .footer-tagline {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--on-surface);
+            margin-bottom: var(--spacing-12);
+            line-height: 1.3;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: var(--spacing-12);
+            border-top: 1px solid rgba(67, 71, 79, 0.2);
+            font-size: 12px;
+            color: var(--on-secondary-container);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ═══════════════════════════════════════════ RESPONSIVE ═══════════════════════════════════════════ */
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: var(--spacing-16) var(--spacing-6);
+                min-height: auto;
+                padding-top: var(--spacing-12);
+            }
+
+            .core-section {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-12);
+            }
+
+            .architecture-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: var(--spacing-6);
+                text-align: center;
+            }
+        }
+
+        /* ═══════════════════════════════════════════ SCROLL ANIMATIONS ═══════════════════════════════════════════ */
+
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-child {
+            animation-delay: calc(var(--child-index) * 100ms);
+        }
+
+        /* Glassmorphism overlay for modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(19, 19, 19, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(67, 71, 79, 0.3);
+            padding: var(--spacing-12);
+            border-radius: 0;
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--on-surface);
+            font-size: 24px;
+            cursor: pointer;
+            float: right;
+            transition: color 0.3s ease;
+        }
+
+        .modal-close:hover {
+            color: var(--primary-container);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 300;
+            font-style: italic;
+            margin-bottom: var(--spacing-8);
+            clear: both;
+        }
+
+        .modal-text {
+            font-size: 16px;
+            color: var(--secondary);
+            line-height: 1.8;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .modal-button {
+            background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
+            color: #00315F;
+            padding: var(--spacing-6) var(--spacing-12);
+            border: none;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            font-family: var(--font-ui);
+            transition: all 0.3s ease;
+        }
+
+        .modal-button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">SignalIQ</div>
+            <ul class="nav-links">
+                <li><a href="#systems">Systems</a></li>
+                <li><a href="#modules">Modules</a></li>
+                <li><a href="#case-studies">Case Studies</a></li>
+                <li><a href="#docs">Docs</a></li>
+                <li><a href="#login">Login</a></li>
+            </ul>
+            <button class="btn-start" onclick="scrollToSection('demo')">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Deploy Multi-Agent<br>
+                Intelligence for<br>
+                <em>Real-Time Signal</em><br>
+                Processing
+            </h1>
+            <p class="hero-subtitle">
+                Orchestrate autonomous agents with precision-engineered architectures designed for high-frequency environments and mission-critical systems.
+            </p>
+            <div class="hero-cta">
+                <button class="btn-primary" onclick="openModal('demo-modal')">Request System Demo</button>
+                <span style="color: var(--on-secondary-container); font-size: 12px;">→ 15 min technical briefing</span>
+            </div>
+        </div>
+
+        <!-- Metrics -->
+        <div class="metrics">
+            <div class="metric">
+                <div class="metric-value">99.99%</div>
+                <div class="metric-label">System Uptime</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">&lt;5ms</div>
+                <div class="metric-label">Processing Latency</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">50M+</div>
+                <div class="metric-label">Signals Daily</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value">ISO-27001</div>
+                <div class="metric-label">Security & Standards</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Section -->
+    <section class="core-section">
+        <div>
+            <span class="core-label">CORE ARCHITECTURE</span>
+            <h2 class="core-title">
+                The Central<br>
+                Multi-Agent<br>
+                <em>Orchestrator</em>
+            </h2>
+            <p class="core-description">
+                A monolithic core designed to distribute cognitive load across specialized autonomous agents. SignalIQ doesn't just process data; it understands systemic nuances in high-frequency environments.
+            </p>
+            <div style="margin-top: var(--spacing-8);">
+                <span class="core-label">AUTONOMOUS MODES: 0.8</span>
+                <span style="display: block; font-size: 14px; color: var(--secondary); margin-top: var(--spacing-4);">Read State: Active</span>
+            </div>
+        </div>
+
+        <div class="architecture-diagram">
+            <div class="arch-component">
+                <div class="arch-icon">🧠</div>
+                <div class="arch-label">Perception</div>
+            </div>
+            <div class="arch-component">
+                <div class="arch-icon">⚙️</div>
+                <div class="arch-label">Orchestration</div>
+            </div>
+            <div class="arch-component">
+                <div class="arch-icon">🚀</div>
+                <div class="arch-label">Logics</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="feature-card fade-in-up" style="--child-index: 0;">
+            <div class="feature-number">01</div>
+            <h3 class="feature-title">Perception Engine</h3>
+            <p class="feature-description">
+                Advanced multi-modal analysis capable of translating raw data into structured intelligence vectors.
+            </p>
+            <ul class="feature-list">
+                <li>Multi-modal synthesis</li>
+                <li>Vector embeddings</li>
+                <li>Real-time normalization</li>
+            </ul>
+        </div>
+
+        <div class="feature-card fade-in-up" style="--child-index: 1;">
+            <div class="feature-number">02</div>
+            <h3 class="feature-title">Collaborative Logic</h3>
+            <p class="feature-description">
+                Inter-agent communication protocols that facilitate complex problem solving without human intervention.
+            </p>
+            <ul class="feature-list">
+                <li>Signal synchronization</li>
+                <li>Consensus mechanisms</li>
+                <li>Conflict resolution</li>
+            </ul>
+        </div>
+
+        <div class="feature-card fade-in-up" style="--child-index: 2;">
+            <div class="feature-number">03</div>
+            <h3 class="feature-title">Automated Execution</h3>
+            <p class="feature-description">
+                High-velocity deployment of decisions into operational systems with guaranteed sub-frequency accuracy.
+            </p>
+            <ul class="feature-list">
+                <li>API orchestration</li>
+                <li>Task feedback loops</li>
+                <li>Error mitigation</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="demo">
+        <h2 class="cta-title">Ready to Scale Your<br><em>Intelligence?</em></h2>
+        <p class="cta-subtitle">
+            Request a technical briefing. Discover how multi-agent architectures transform signal processing at scale.
+        </p>
+        <button class="cta-button" onclick="openModal('demo-modal')">Schedule Technical Briefing</button>
+        <p class="cta-footnote">Availability limited to US & European markets</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div>
+                <div class="footer-tagline">Engineered for<br><em>precision</em>. Built for<br><em>autonomy</em>.</div>
+            </div>
+            <div class="footer-section">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">API Documentation</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy</a></li>
+                    <li><a href="#">Terms</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>System</h3>
+                <ul>
+                    <li><a href="#">Operations</a></li>
+                    <li><a href="#">Infrastructure</a></li>
+                    <li><a href="#">Enterprise</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div>© 2024 SignalIQ. Engineered for precision.</div>
+            <div>v.2.1 (stable)</div>
+        </div>
+    </footer>
+
+    <!-- Demo Modal -->
+    <div class="modal" id="demo-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('demo-modal')">×</button>
+            <h2 class="modal-title">Technical Briefing</h2>
+            <p class="modal-text">
+                A precision-engineered walkthrough of multi-agent orchestration in action. Our engineers will guide you through architecture, integration points, and real-world deployment scenarios.
+            </p>
+            <form onsubmit="handleSubmit(event)">
+                <input type="text" placeholder="Full Name" required style="width: 100%; padding: var(--spacing-6); background: var(--surface-low); border: 1px solid rgba(67, 71, 79, 0.3); color: var(--on-surface); margin-bottom: var(--spacing-6); border-radius: 0; font-family: var(--font-ui);">
+                <input type="email" placeholder="Work Email" required style="width: 100%; padding: var(--spacing-6); background: var(--surface-low); border: 1px solid rgba(67, 71, 79, 0.3); color: var(--on-surface); margin-bottom: var(--spacing-6); border-radius: 0; font-family: var(--font-ui);">
+                <input type="tel" placeholder="Phone Number" required style="width: 100%; padding: var(--spacing-6); background: var(--surface-low); border: 1px solid rgba(67, 71, 79, 0.3); color: var(--on-surface); margin-bottom: var(--spacing-6); border-radius: 0; font-family: var(--font-ui);">
+                <button type="submit" class="modal-button">Schedule Briefing</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        });
+
+        // Scroll to section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Handle form submission
+        function handleSubmit(event) {
+            event.preventDefault();
+            alert('Thank you! We\'ll contact you shortly to schedule your technical briefing.');
+            closeModal('demo-modal');
+            event.target.reset();
+        }
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Prevent form inputs from closing modal on enter
+        document.querySelectorAll('.modal-content input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.type !== 'submit') {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
