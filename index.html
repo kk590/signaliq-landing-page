@@ -1252,9 +1252,9 @@
                 See SignalIQ's hierarchical multi-agent architecture in action. Learn how to deploy B2B intelligence locally, with zero API costs.
             </p>
             <form onsubmit="handleSubmit(event)">
-                <input type="text" placeholder="Full Name" required>
-                <input type="email" placeholder="Work Email" required>
-                <input type="tel" placeholder="Phone Number" required>
+                <input type="text" name="fullName" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Work Email" required>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
                 <button type="submit" class="modal-button">Schedule Demo</button>
             </form>
         </div>
@@ -1275,11 +1275,44 @@
             }
         });
 
-        function handleSubmit(event) {
+        async function handleSubmit(event) {
             event.preventDefault();
+            
+            const form = event.target;
+            const inputs = form.querySelectorAll('input');
+            
+            // Collect form data
+            const formData = {
+                fullName: inputs[0].value,
+                email: inputs[1].value,
+                phone: inputs[2].value,
+                timestamp: new Date().toISOString(),
+                source: 'SignalIQ Landing Page'
+            };
+            
+            // Your Relay webhook URL
+            const webhookUrl = 'https://hook.relay.app/api/v1/playbook/cmqxvl5vo8rn50pkscpd80yrw/trigger/yTxQugQv2uwesSqqgyus3w';
+            
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                if (response.ok || response.status === 202) {
+                    console.log('Data sent to Relay successfully');
+                }
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
+            
+            // Show success message and close modal regardless of webhook response
             alert('Thank you! We\'ll contact you shortly to schedule your demo.');
             closeModal('demo-modal');
-            event.target.reset();
+            form.reset();
         }
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
