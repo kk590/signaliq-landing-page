@@ -1279,37 +1279,36 @@
             event.preventDefault();
             
             const form = event.target;
-            const inputs = form.querySelectorAll('input');
-            
-            // Collect form data
-            const formData = {
-                fullName: inputs[0].value,
-                email: inputs[1].value,
-                phone: inputs[2].value,
-                timestamp: new Date().toISOString(),
-                source: 'SignalIQ Landing Page'
-            };
+            const fullName = form.querySelector('input[name="fullName"]').value;
+            const email = form.querySelector('input[name="email"]').value;
+            const phone = form.querySelector('input[name="phone"]').value;
             
             // Your Relay webhook URL
             const webhookUrl = 'https://hook.relay.app/api/v1/playbook/cmqxvl5vo8rn50pkscpd80yrw/trigger/yTxQugQv2uwesSqqgyus3w';
+            
+            // Send data as form-encoded format which works better with Relay
+            const params = new URLSearchParams();
+            params.append('fullName', fullName);
+            params.append('email', email);
+            params.append('phone', phone);
+            params.append('timestamp', new Date().toISOString());
+            params.append('source', 'SignalIQ Landing Page');
             
             try {
                 const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: JSON.stringify(formData)
+                    body: params.toString()
                 });
                 
-                if (response.ok || response.status === 202) {
-                    console.log('Data sent to Relay successfully');
-                }
+                console.log('Webhook response:', response.status);
             } catch (error) {
                 console.error('Error submitting form:', error);
             }
             
-            // Show success message and close modal regardless of webhook response
+            // Show success message and close modal
             alert('Thank you! We\'ll contact you shortly to schedule your demo.');
             closeModal('demo-modal');
             form.reset();
