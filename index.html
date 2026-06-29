@@ -1149,7 +1149,7 @@
             </div>
             <div class="tech-item">
                 <div class="tech-category">Agent Framework</div>
-                <div class="tech-name">CrewAI + Custom ADK</div>
+                <div class="tech-name">LangChain + Custom ADK</div>
                 <div class="tech-purpose">Orchestration & task delegation</div>
             </div>
             <div class="tech-item">
@@ -1252,9 +1252,9 @@
                 See SignalIQ's hierarchical multi-agent architecture in action. Learn how to deploy B2B intelligence locally, with zero API costs.
             </p>
             <form onsubmit="handleSubmit(event)">
-                <input type="text" name="fullName" placeholder="Full Name" required>
-                <input type="email" name="email" placeholder="Work Email" required>
-                <input type="tel" name="phone" placeholder="Phone Number" required>
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Work Email" required>
+                <input type="tel" placeholder="Phone Number" required>
                 <button type="submit" class="modal-button">Schedule Demo</button>
             </form>
         </div>
@@ -1275,43 +1275,11 @@
             }
         });
 
-        async function handleSubmit(event) {
+        function handleSubmit(event) {
             event.preventDefault();
-            
-            const form = event.target;
-            const fullName = form.querySelector('input[name="fullName"]').value;
-            const email = form.querySelector('input[name="email"]').value;
-            const phone = form.querySelector('input[name="phone"]').value;
-            
-            // Your Relay webhook URL
-            const webhookUrl = 'https://hook.relay.app/api/v1/playbook/cmqxvl5vo8rn50pkscpd80yrw/trigger/yTxQugQv2uwesSqqgyus3w';
-            
-            // Send data as form-encoded format which works better with Relay
-            const params = new URLSearchParams();
-            params.append('fullName', fullName);
-            params.append('email', email);
-            params.append('phone', phone);
-            params.append('timestamp', new Date().toISOString());
-            params.append('source', 'SignalIQ Landing Page');
-            
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: params.toString()
-                });
-                
-                console.log('Webhook response:', response.status);
-            } catch (error) {
-                console.error('Error submitting form:', error);
-            }
-            
-            // Show success message and close modal
             alert('Thank you! We\'ll contact you shortly to schedule your demo.');
             closeModal('demo-modal');
-            form.reset();
+            event.target.reset();
         }
 
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
