@@ -817,123 +817,6 @@
             color: var(--on-surface-dim);
         }
 
-        /* ═══════════════════════════════════════════ MODAL ═══════════════════════════════════════════ */
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: var(--surface-high);
-            padding: var(--spacing-16);
-            border: 1px solid rgba(67, 71, 79, 0.3);
-            border-radius: 4px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            right: var(--spacing-8);
-            top: var(--spacing-8);
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: var(--on-surface-dim);
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--on-surface);
-        }
-
-        .modal-title {
-            font-family: var(--font-display);
-            font-size: 36px;
-            font-weight: 300;
-            margin-bottom: var(--spacing-6);
-            color: var(--on-surface);
-        }
-
-        .modal-text {
-            font-size: 15px;
-            color: var(--on-surface-dim);
-            line-height: 1.6;
-            margin-bottom: var(--spacing-12);
-        }
-
-        .modal-content form {
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-6);
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: var(--spacing-6);
-            background: var(--surface);
-            border: 1px solid rgba(67, 71, 79, 0.3);
-            color: var(--on-surface);
-            border-radius: 2px;
-            font-family: var(--font-ui);
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: var(--primary-container);
-        }
-
-        .modal-button {
-            background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
-            color: #00315F;
-            padding: var(--spacing-6) var(--spacing-12);
-            border: none;
-            border-radius: 2px;
-            font-weight: 600;
-            font-size: 13px;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: var(--font-ui);
-            margin-top: var(--spacing-4);
-        }
-
-        .modal-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0px 12px 32px rgba(165, 200, 255, 0.2);
-        }
-
         /* ═══════════════════════════════════════════ RESPONSIVE ═══════════════════════════════════════════ */
 
         @media (max-width: 768px) {
@@ -962,7 +845,7 @@
                 <li><a href="#tech">Technology</a></li>
                 <li><a href="#demo">Get Started</a></li>
             </ul>
-            <button class="btn-start" onclick="openModal('demo-modal')">Request Demo</button>
+            <button class="btn-start" onclick="openDemo()">Request Demo</button>
         </div>
     </nav>
 
@@ -977,8 +860,8 @@
                 Privacy-first AI multi-agent system for lead generation and infrastructure auditing. Zero cloud API costs. 100% on-device reasoning with Qwen, Mistral, or other local LLM models via Ollama.
             </p>
             <div class="hero-cta">
-                <button class="btn-primary" onclick="openModal('demo-modal')">Request Demo</button>
-                <button class="btn-secondary" onclick="openModal('demo-modal')">Schedule Call</button>
+                <button class="btn-primary" onclick="openDemo()">Request Demo</button>
+                <button class="btn-secondary" onclick="openDemo()">Schedule Call</button>
             </div>
         </div>
     </section>
@@ -1201,7 +1084,7 @@
         <p class="cta-subtitle">
             Request a demo to see the hierarchical multi-agent system in action. Understand how to deploy B2B intelligence entirely on-device.
         </p>
-        <button class="cta-button" onclick="openModal('demo-modal')">Request Demo</button>
+        <button class="cta-button" onclick="openDemo()">Request Demo</button>
         <p class="cta-footnote">Enterprise-Grade • Privacy-First • Local Deployment</p>
     </section>
 
@@ -1243,89 +1126,22 @@
         </div>
     </footer>
 
-    <!-- Demo Modal -->
-    <div class="modal" id="demo-modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal('demo-modal')">×</button>
-            <h2 class="modal-title">Schedule Demo</h2>
-            <p class="modal-text">
-                See SignalIQ's hierarchical multi-agent architecture in action. Learn how to deploy B2B intelligence locally, with zero API costs.
-            </p>
-            <form onsubmit="handleSubmit(event)">
-                <input type="text" placeholder="Full Name" required>
-                <input type="email" placeholder="Work Email" required>
-                <input type="tel" placeholder="Phone Number" required>
-                <button type="submit" class="modal-button">Schedule Demo</button>
-            </form>
-        </div>
-    </div>
-
     <script>
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
+        // Google Form URL
+        const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-o7ePQGH9nBWPH9BeVSQF97tcKvQvcOAW2T4InWaEKG8EfA/viewform?usp=dialog';
+
+        // Open Google Form in new tab
+        function openDemo() {
+            window.open(GOOGLE_FORM_URL, '_blank');
         }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-            }
-        });
-
-        async function handleSubmit(event) {
-            event.preventDefault();
-            
-            const form = event.target;
-            const fullName = form.querySelector('input[name="fullName"]').value;
-            const email = form.querySelector('input[name="email"]').value;
-            const phone = form.querySelector('input[name="phone"]').value;
-            
-            // Replace with your Google Apps Script deployment URL
-            const scriptUrl = 'https://script.google.com/macros/s/AKfycbzbDNcWK33ToQtRSuw9y8oA80SpE2PpVYTSKZ_cMy_J1Uf3Aomy0P5B_B7jg5QdMw0T/exec';
-            
-            try {
-                const response = await fetch(scriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        fullName: fullName,
-                        email: email,
-                        phone: phone,
-                        timestamp: new Date().toISOString(),
-                        source: 'SignalIQ Landing Page'
-                    })
-                });
-                
-                console.log('Form submitted successfully');
-            } catch (error) {
-                console.error('Error submitting form:', error);
-            }
-            
-            // Show success message and close modal
-            alert('Thank you! We\'ll contact you shortly to schedule your demo.');
-            closeModal('demo-modal');
-            form.reset();
-        }
-
+        // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        document.querySelectorAll('.modal-content input').forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && this.type !== 'submit') {
-                    e.preventDefault();
                 }
             });
         });
